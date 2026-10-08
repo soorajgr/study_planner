@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Study Planner</title>
+    <style>
+      body { font-family: Arial; max-width: 400px; margin: 40px auto; }
+      li { margin: 8px 0; }
+      .task-text { cursor: pointer; }
+      .done { text-decoration: line-through; color: grey; }
+      .delete-btn { margin-left: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>My Study Planner</h1>
+
+    <input type="text" id="taskInput" placeholder="Enter a study task">
+    <button id="addButton">Add</button>
+    <ul id="taskList"></ul>
+
+    <script>
+      const input = document.getElementById("taskInput");
+      const button = document.getElementById("addButton");
+      const list = document.getElementById("taskList");
+
+      button.addEventListener("click", function () {
+        const text = input.value;
+        if (text === "") return;
+
+        const item = document.createElement("li");
+
+        const label = document.createElement("span");
+        label.textContent = text;
+        label.className = "task-text";
+        label.addEventListener("click", function () {
+          label.classList.toggle("done");
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.addEventListener("click", function () {
+          item.remove();
+        });
+
+        item.appendChild(label);
+        item.appendChild(deleteBtn);
+        list.appendChild(item);
+        input.value = "";
+      });
+    </script>
+  </body>
+</html>
