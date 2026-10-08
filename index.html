@@ -3,11 +3,43 @@
   <head>
     <title>Study Planner</title>
     <style>
-      body { font-family: Arial; max-width: 400px; margin: 40px auto; }
-      li { margin: 8px 0; }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 40px auto;
+        background-color: #f0f4f8;
+      }
+      h1 { text-align: center; color: #2c3e50; }
+      input {
+        padding: 8px;
+        width: 65%;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+      }
+      button {
+        padding: 8px 14px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover { background-color: #2980b9; }
+      ul { list-style: none; padding: 0; }
+      li {
+        background: white;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
       .task-text { cursor: pointer; }
       .done { text-decoration: line-through; color: grey; }
-      .delete-btn { margin-left: 10px; }
+      .delete-btn { background-color: #e74c3c; }
+      .delete-btn:hover { background-color: #c0392b; }
+      #counter { text-align: center; color: #2c3e50; font-weight: bold; }
     </style>
   </head>
   <body>
@@ -16,17 +48,26 @@
     <input type="text" id="taskInput" placeholder="Enter a study task">
     <button id="addButton">Add</button>
     <ul id="taskList"></ul>
+    <p id="counter"></p>
 
     <script>
       const input = document.getElementById("taskInput");
       const button = document.getElementById("addButton");
       const list = document.getElementById("taskList");
+      const counter = document.getElementById("counter");
 
-      // Load saved tasks (or start with an empty list)
       let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
       function saveTasks() {
         localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      function updateCounter() {
+        let left = 0;
+        tasks.forEach(function (task) {
+          if (!task.done) left = left + 1;
+        });
+        counter.textContent = left + " task(s) left";
       }
 
       function showTasks() {
@@ -59,16 +100,24 @@
           item.appendChild(deleteBtn);
           list.appendChild(item);
         });
+
+        updateCounter();
       }
 
-      button.addEventListener("click", function () {
-        const text = input.value;
+      function addTask() {
+        const text = input.value.trim();
         if (text === "") return;
 
         tasks.push({ text: text, done: false });
         saveTasks();
         showTasks();
         input.value = "";
+      }
+
+      button.addEventListener("click", addTask);
+
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") addTask();
       });
 
       showTasks();
